@@ -4,20 +4,23 @@ const form = document.querySelector('#form')
 const description = document.querySelector('#description')
 const price = document.querySelector('#Price')
 const div = document.querySelector('#div')
+const addCartBtn = document.querySelector('#addtocart')
 const btn = document.querySelector('#button')
 
 let arr = [];
+let cartArr = [];
+
 
 
 
 
 function render(){
-
-
+  
+  
   
   div.innerHTML = '';
   
-  arr.map((item)=>{
+  arr.map((item,index)=>{
     
     
     div.innerHTML += `
@@ -27,7 +30,7 @@ function render(){
     <h5 class="card-title">Title :${item.title}</h5>
     <p class="card-text">Descriptiion : ${item.description}</p>
     <p class="card-text">Price : ${item.price}</p>
-    <button class="btn btn-primary">Add to cart</button>
+    <button class="btn btn-primary" id="addtocart" onclick="addToCart(${[index]})">Add to cart</button>
     </div>
     </div>
     `
@@ -40,51 +43,75 @@ function render(){
 
 
 
-function getFromLocalStorage(){
-
-let GetItem = localStorage.getItem('arrLocal')
-JSON.parse(GetItem);
-render()
-
-}
-
-getFromLocalStorage()
-
-
 
 
 form.addEventListener('submit',(event)=>{
   
   event.preventDefault();
+  
+  console.log(title.value);
+  console.log(description.value);
+  console.log(price.value);
+  
+  let obj = {
+    title:title.value,
+    description:description.value,
+    price:price.value,
+  }
+  arr.push(obj);
+  
+  
+  
+  let set= localStorage.setItem('arr',JSON.stringify(arr));
+  
+  render()
 
-console.log(title.value);
-console.log(description.value);
-console.log(price.value);
-
-let obj = {
-  title:title.value,
-  description:description.value,
-  price:price.value,
-}
-arr.push(obj);
+  
+  
+  
+  
+  
+})  
 
 
-
- localStorage.setItem('arrLocal',JSON.stringify(arr));
-
- getFromLocalStorage()
-
-render()
+window.addEventListener('load',()=>{
+  
+  arr=[]
+  let get = JSON.parse(localStorage.getItem('arr'))
+  arr.push(get)  
+  
+  
+  if(arr=get){
+    render()
+  }else{
+    arr=[]
+    
+    div.innerHTML=''
+    
+  }
 
 })
 
+function addToCart(index){
+  if(cartArr.includes(cartArr[index])){
+    cartArr[index].quantity +=1
+
+  }else{
+    cartArr[index].quantity = 1
+    cartArr.push(cartArr[index].quantity)
+  }
+  cartArr.push(arr[index]);
+  
+  console.log(cartArr);
+localStorage.setItem('cartArr',JSON.stringify(cartArr));
+
+}
 
 
 
-
-
-
-
+function gocart(){
+  window.location= 'Cart.html'
+}
 
 
 
